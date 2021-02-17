@@ -13,6 +13,7 @@ import (
 	"github.com/vmware/govmomi/vapi/library"
 	"github.com/vmware/govmomi/vapi/vcenter"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/folder"
 	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/provider"
@@ -584,6 +585,7 @@ func (deployData *VCenterDeploy) deployVmtx() (*types.ManagedObjectReference, er
 			Folder:       deployData.FolderID,
 		},
 	}
+	log.Printf("[DEBUG] virtualmachine.DeployVmtx: Deploying VM from Content Library template item %s, with spec %s.", deployData.LibraryItem.ID, spew.Sdump(deploy))
 	ctx := context.TODO()
 	return deployData.VCenterManager.DeployTemplateLibraryItem(ctx, deployData.LibraryItem.ID, deploy)
 }
@@ -616,6 +618,8 @@ func (deployData *VCenterDeploy) deployOvf() (*types.ManagedObjectReference, err
 			FolderID:       deployData.FolderID,
 		},
 	}
+	log.Printf("[DEBUG] virtualmachine.DeployOvf: Deploying VM from Content Library OVF item %s with spec %s.", deployData.LibraryItem.ID, spew.Sdump(deploy))
+	spew.Dump(deploy)
 	ctx := context.TODO()
 	return deployData.VCenterManager.DeployLibraryItem(ctx, deployData.LibraryItem.ID, deploy)
 }
